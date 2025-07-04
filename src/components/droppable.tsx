@@ -11,7 +11,9 @@ export function Droppable(props: any) {
 
   return (
     <Card ref={setNodeRef} style={style}>
-      <CardContent>{props.children}</CardContent>
+      <CardContent className="grid w-full h-full place-items-center text-muted-foreground gap-4">
+        {props.children}
+      </CardContent>
     </Card>
   );
 }

@@ -2,6 +2,7 @@ import { memo } from "react";
 import { Outlet } from "react-router-dom";
 
 import Header from "@/components/header";
+import { Toaster } from "@/components/ui/sonner";
 import { GridPattern } from "@/components/magicui/grid-pattern";
 const DefaultLayout = memo(() => {
   return (
@@ -13,6 +14,7 @@ const DefaultLayout = memo(() => {
       <div className="lg:max-w-6xl px-4 w-[calc(100%-32px)] lg:w-auto pt-24 top-40 mx-auto">
         <Outlet />
       </div>
+      <Toaster richColors expand />
     </>
   );
 });
