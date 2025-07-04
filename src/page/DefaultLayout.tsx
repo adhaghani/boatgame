@@ -11,7 +11,7 @@ const DefaultLayout = memo(() => {
       <div className="fixed t-0 l-0 w-full h-full -z-10">
         <GridPattern strokeDasharray={"4 2"} />
       </div>
-      <div className="lg:max-w-6xl px-4 w-[calc(100%-32px)] lg:w-auto pt-24 top-40 mx-auto">
+      <div className="lg:max-w-6xl px-0 md:px-4 lg:px-0 w-[calc(100%-20px)] lg:w-auto pt-24 top-40 mx-auto">
         <Outlet />
       </div>
       <Toaster richColors expand />

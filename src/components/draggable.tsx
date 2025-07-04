@@ -1,5 +1,6 @@
 import { useDraggable } from "@dnd-kit/core";
 import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "sonner";
 
 export function Draggable(props: any) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -17,9 +18,9 @@ export function Draggable(props: any) {
       style={style}
       {...listeners}
       {...attributes}
-      className="w-full h-full aspect-square"
+      className={props.className}
     >
-      <Card className="w-full h-full aspect-square border-1 grid place-items-center">
+      <Card className="w-full h-full border-1 grid place-items-center">
         <CardContent>{props.children}</CardContent>
       </Card>
     </button>

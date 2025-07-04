@@ -21,7 +21,7 @@ export function generatePuzzle(difficulty: Difficulty): Puzzle {
   const rawClues = generateClues(solution);
 
   const clueCount = {
-    easy: 10,
+    easy: 15,
     medium: 8,
     hard: 5
   }[difficulty];

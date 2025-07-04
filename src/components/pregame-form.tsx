@@ -64,7 +64,48 @@ const PreGameForm = () => {
       username: values.username,
       difficulty: values.difficulty as Difficulty,
       gameStatus: "in_progress",
-      userAnswer: [],
+      userAnswer: [
+        {
+          position: 1,
+          nationality: "",
+          departureTime: "",
+          cargo: "",
+          chimneyColor: "",
+          destination: ""
+        },
+        {
+          position: 2,
+          nationality: "",
+          departureTime: "",
+          cargo: "",
+          chimneyColor: "",
+          destination: ""
+        },
+        {
+          position: 3,
+          nationality: "",
+          departureTime: "",
+          cargo: "",
+          chimneyColor: "",
+          destination: ""
+        },
+        {
+          position: 4,
+          nationality: "",
+          departureTime: "",
+          cargo: "",
+          chimneyColor: "",
+          destination: ""
+        },
+        {
+          position: 5,
+          nationality: "",
+          departureTime: "",
+          cargo: "",
+          chimneyColor: "",
+          destination: ""
+        }
+      ],
       solution: Puzzle.solution,
       clues: Puzzle.clues
     });
