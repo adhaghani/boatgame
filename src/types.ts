@@ -55,6 +55,7 @@ export interface GameState {
   difficulty: Difficulty;
   gameStatus: GameStatus;
   timeTaken: number;
+  startTime: string;
   userAnswer: ShipAttribute[];
   solution: ShipAttribute[];
   clues: string[];

@@ -1,9 +1,8 @@
-import { memo, useEffect } from "react";
-
-import { useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useGameState } from "@/context/gameStateContext";
-import { Button } from "@/components/ui/button";
 
+import { Button } from "@/components/ui/button";
+import { formatTime } from "@/hooks/formatTimer";
 import {
   Drawer,
   DrawerContent,
@@ -26,69 +25,79 @@ import { ATTRIBUTE, type ShipAttribute } from "@/types";
 import { Droppable } from "@/components/droppable";
 import { Draggable } from "@/components/draggable";
 import { DndContext } from "@dnd-kit/core";
+import { useTimer } from "@/hooks/useTimer";
 
 const GameLayout = memo(() => {
   const { gameState, updateState } = useGameState();
 
   const containers = [1, 2, 3, 4, 5];
+
+  const time = useTimer(gameState.gameStatus === "in_progress");
+  const formatted = formatTime(time);
+
   useEffect(() => {
-    // console.log the current state
-    console.table(gameState);
+    console.log(gameState);
   });
 
   return (
     <>
       {/* CLUE */}
-      <Drawer>
-        <DrawerTrigger>
-          <Button>View Clues</Button>
-        </DrawerTrigger>
-        <DrawerContent className="min-h-fit pb-10 h-[60vh] w-full px-14">
-          <DrawerHeader>
-            <DrawerTitle>All the clues</DrawerTitle>
-          </DrawerHeader>
-          <Tabs
-            defaultValue="carousel"
-            className="w-full max-w-[500px] mx-auto"
-          >
-            <TabsList>
-              <TabsTrigger value="carousel">carousel</TabsTrigger>
-              <TabsTrigger value="list">list</TabsTrigger>
-            </TabsList>
-            <TabsContent value="carousel">
-              <Carousel>
-                <CarouselContent>
+      <div className="flex justify-between items-center gap-4">
+        <Drawer>
+          <DrawerTrigger>
+            <Button size={"lg"}>View Clues</Button>
+          </DrawerTrigger>
+          <DrawerContent className="min-h-fit pb-10 h-[60vh] w-full px-14">
+            <DrawerHeader>
+              <DrawerTitle>All the clues</DrawerTitle>
+            </DrawerHeader>
+            <Tabs
+              defaultValue="carousel"
+              className="w-full max-w-[500px] mx-auto"
+            >
+              <TabsList>
+                <TabsTrigger value="carousel">carousel</TabsTrigger>
+                <TabsTrigger value="list">list</TabsTrigger>
+              </TabsList>
+              <TabsContent value="carousel">
+                <Carousel>
+                  <CarouselContent>
+                    {gameState.clues.map((clue, index) => (
+                      <CarouselItem key={index}>
+                        <Card className="w-full">
+                          <CardHeader>
+                            <CardTitle>Clues #{index + 1}</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <Text as="h3">{clue}</Text>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              </TabsContent>
+              <TabsContent value="list">
+                <ul>
                   {gameState.clues.map((clue, index) => (
-                    <CarouselItem key={index}>
-                      <Card className="w-full">
-                        <CardHeader>
-                          <CardTitle>Clues #{index + 1}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <Text as="h3">{clue}</Text>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
+                    <li className="ml-2 list-disc" key={index}>
+                      <Text as="p" className="font-semibold">
+                        {clue}
+                      </Text>
+                    </li>
                   ))}
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
-            </TabsContent>
-            <TabsContent value="list">
-              <ul>
-                {gameState.clues.map((clue, index) => (
-                  <li className="ml-2 list-disc" key={index}>
-                    <Text as="p" className="font-semibold">
-                      {clue}
-                    </Text>
-                  </li>
-                ))}
-              </ul>
-            </TabsContent>
-          </Tabs>
-        </DrawerContent>
-      </Drawer>
+                </ul>
+              </TabsContent>
+            </Tabs>
+          </DrawerContent>
+        </Drawer>
+
+        <Text as="p" className="bg-secondary px-4 py-2 rounded-lg border">
+          Time Taken : <span className="font-semibold">{formatted}</span>
+        </Text>
+      </div>
       {/* QUESTION GRID */}
       <DndContext onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-5 gap-4 mt-4 ">
@@ -152,7 +161,7 @@ const GameLayout = memo(() => {
             {ATTRIBUTE.nationality.map((value: any) => {
               const isAlreadyUsed = gameState.userAnswer.some(
                 (s) => s["nationality" as keyof ShipAttribute] === value
-              );
+              );      
 
               return (
                 <Draggable

@@ -1,17 +1,26 @@
 import { useEffect, useState } from "react";
+import { useGameState } from "@/context/gameStateContext";
 
 export function useTimer(start: boolean = true): number {
-  const [seconds, setSeconds] = useState(0);
+  const { gameState } = useGameState();
+
+  const startTime = new Date(gameState.startTime);
+  const [seconds, setSeconds] = useState(() => {
+    const now = new Date();
+    return Math.floor((now.getTime() - startTime.getTime()) / 1000);
+  });
 
   useEffect(() => {
     if (!start) return;
 
     const interval = setInterval(() => {
-      setSeconds((prev) => prev + 1);
+      const now = new Date();
+      const elapsed = Math.floor((now.getTime() - startTime.getTime()) / 1000);
+      setSeconds(elapsed);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [start]);
+  }, [start, gameState.startTime]);
 
   return seconds;
 }

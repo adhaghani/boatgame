@@ -9,7 +9,7 @@ import type {
 } from "./types";
 import { shuffleArray } from "./util";
 import { saveAttempt } from "./constants";
-import { useGameState } from "./context/gameStateContext";
+
 export interface Puzzle {
   solution: ShipAttribute[];
   clues: string[];
@@ -21,9 +21,9 @@ export function generatePuzzle(difficulty: Difficulty): Puzzle {
   const rawClues = generateClues(solution);
 
   const clueCount = {
-    easy: 15,
-    medium: 8,
-    hard: 5
+    easy: 20,
+    medium: 10,
+    hard: 8
   }[difficulty];
 
   const clues = shuffleArray(rawClues).slice(0, clueCount);

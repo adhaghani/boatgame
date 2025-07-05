@@ -13,6 +13,7 @@ import {
   DropdownMenuContent
 } from "./ui/dropdown-menu";
 import { useGameState } from "@/context/gameStateContext";
+import { Link } from "react-router-dom";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 
 const Header = () => {
@@ -20,11 +21,14 @@ const Header = () => {
 
   const gameStatus = gameState.gameStatus;
   let isBeingPlayed = gameStatus === "in_progress";
+
   return (
     <nav className="fixed top-5 left-4 right-4 w-[calc(100%-32px)] 2xl:left-50 2xl:right-50 lg:max-w-6xl lg:w-auto mx-auto bg-secondary/50 backdrop-blur-sm py-2 px-4 rounded-lg flex justify-between items-center gap-4">
-      <Text as="h4" className="lg:block hidden">
-        Boatly - Ultimate Boat Puzzle Game
-      </Text>
+      <Link to={"/"}>
+        <Text as="h4" className="lg:block hidden">
+          Boatly - The Impossible Game
+        </Text>
+      </Link>
       <Text as="h4" className="lg:hidden block">
         Boatly
       </Text>
@@ -48,7 +52,6 @@ const Header = () => {
               <DropdownMenuLabel>All Options</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>View Past Attempt</DropdownMenuItem>
-              <DropdownMenuItem>Change Username</DropdownMenuItem>
               <DropdownMenuItem>Clear All Data</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

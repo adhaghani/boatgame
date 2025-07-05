@@ -63,6 +63,7 @@ const PreGameForm = () => {
       ...gameState,
       username: values.username,
       difficulty: values.difficulty as Difficulty,
+      startTime: new Date().toISOString(),
       gameStatus: "in_progress",
       userAnswer: [
         {

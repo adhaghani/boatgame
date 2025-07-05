@@ -8,6 +8,7 @@ const defaultState: GameState = {
   username: "",
   difficulty: "easy",
   gameStatus: "not_started",
+  startTime: "",
   timeTaken: 0,
   userAnswer: [],
   solution: [],

@@ -1,12 +1,4 @@
-import { Input } from "./ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from "./ui/select";
+import { useGameState } from "@/context/gameStateContext";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -18,22 +10,35 @@ import {
   DialogFooter,
   DialogClose
 } from "./ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
 
 import { useNavigate } from "react-router-dom";
-
+import { submitAnswer } from "@/puzzle";
 
 const EndGameForm = () => {
+  const { gameState, updateState } = useGameState();
+
   const Navigate = useNavigate();
 
   const onEndGame = () => {
+    const now = new Date();
+    const start = new Date(gameState.startTime);
+    const timeTaken = Math.floor((now.getTime() - start.getTime()) / 1000);
+
+    if (gameState.timeTaken < 60) {
+    } else {
+      const result = submitAnswer({
+        userAnswer: gameState.userAnswer,
+        solution: gameState.solution,
+        difficulty: gameState.difficulty,
+        username: gameState.username,
+        timeTaken: timeTaken
+      });
+    }
+
+    updateState({
+      ...gameState,
+      gameStatus: "completed"
+    });
     Navigate("/");
   };
 
