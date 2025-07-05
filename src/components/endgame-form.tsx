@@ -24,16 +24,13 @@ const EndGameForm = () => {
     const start = new Date(gameState.startTime);
     const timeTaken = Math.floor((now.getTime() - start.getTime()) / 1000);
 
-    if (gameState.timeTaken < 60) {
-    } else {
-      const result = submitAnswer({
-        userAnswer: gameState.userAnswer,
-        solution: gameState.solution,
-        difficulty: gameState.difficulty,
-        username: gameState.username,
-        timeTaken: timeTaken
-      });
-    }
+    const result = submitAnswer({
+      userAnswer: gameState.userAnswer,
+      solution: gameState.solution,
+      difficulty: gameState.difficulty,
+      username: gameState.username,
+      timeTaken: timeTaken
+    });
 
     updateState({
       ...gameState,

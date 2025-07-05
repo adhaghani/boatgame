@@ -82,7 +82,10 @@ export function submitAnswer(params: {
     incorrectAttributes
   };
 
-  saveAttempt(attempt);
+  if (timeTaken < 60) {
+  } else {
+    saveAttempt(attempt);
+  }
 
   return { success, incorrectAttributes };
 }

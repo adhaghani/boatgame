@@ -12,3 +12,7 @@ export function getPastAttempts(): attempt[] {
   const data = localStorage.getItem(STORAGE_KEY);
   return data ? JSON.parse(data) : [];
 }
+
+export function clearPastAttempts() {
+  localStorage.removeItem(STORAGE_KEY);
+}
