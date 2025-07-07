@@ -2,18 +2,21 @@ import { useDroppable } from "@dnd-kit/core";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function Droppable(props: any) {
-  const { isOver, setNodeRef } = useDroppable({
+  const { isOver, setNodeRef, active } = useDroppable({
     id: props.id
   });
+  // Only highlight if the dragged item matches the attribute (accept)
+  const isAccepting = isOver && active?.data?.current?.type === props.accept;
 
   return (
-    <Card ref={setNodeRef} className={isOver ? "bg-secondary" : ""}>
-      <CardHeader>
-        <CardTitle className="text-center">Position #{props.id}</CardTitle>
-      </CardHeader>
-      <CardContent className="grid w-full h-full place-items-center text-muted-foreground gap-4">
-        {props.children}
-      </CardContent>
+    <Card
+      ref={setNodeRef}
+      className={
+        (isAccepting ? "bg-secondary scale-105 transition-transform duration-200" : "") +
+        " transition-all"
+      }
+    >
+      {props.children}
     </Card>
   );
 }

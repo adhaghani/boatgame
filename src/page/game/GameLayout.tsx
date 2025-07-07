@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { useGameState } from "@/context/gameStateContext";
+import useIsMobile from "@/hooks/useIsMobile";
 
 import { Button } from "@/components/ui/button";
 import { formatTime } from "@/hooks/formatTimer";
@@ -24,13 +25,41 @@ import {
 import { ATTRIBUTE, type ShipAttribute } from "@/types";
 import { Droppable } from "@/components/droppable";
 import { Draggable } from "@/components/draggable";
-import { DndContext } from "@dnd-kit/core";
+import {
+  DndContext,
+  useSensor,
+  useSensors,
+  TouchSensor,
+  MouseSensor,
+  DragOverlay
+} from "@dnd-kit/core";
+import { defaultDropAnimationSideEffects } from "@dnd-kit/core";
 import { useTimer } from "@/hooks/useTimer";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollBar } from "@/components/ui/scroll-area";
 
 const GameLayout = memo(() => {
   const { gameState, updateState } = useGameState();
+  const isMobile = useIsMobile();
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 10,
+        delay: 100,
+        tolerance: 5
+      }
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 50,
+        tolerance: 5
+      }
+    })
+  );
 
   const containers = [1, 2, 3, 4, 5];
+  const [ActiveID, setActiveID] = useState(null);
+  const [activeDragData, setActiveDragData] = useState<any>(null);
 
   const time = useTimer(gameState.gameStatus === "in_progress");
   const formatted = formatTime(time);
@@ -99,163 +128,258 @@ const GameLayout = memo(() => {
         </Text>
       </div>
       {/* QUESTION GRID */}
-      <DndContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-5 gap-4 mt-4 ">
-          {containers.map((id) => (
-            // We updated the Droppable component so it would accept an `id`
-            // prop and pass it to `useDroppable`
-            // TODO: CREATE ALTERNATIVE FOR MOBILE APPROACH
-            // TODO: CREATE ALTERNATIVE ANSWER OPTION FOR MOBILE APPROACH
-            <Droppable key={id} id={id}>
-              {[
-                "nationality",
-                "departureTime",
-                "cargo",
-                "chimneyColor",
-                "destination"
-              ].map((attr) => (
-                <Card
-                  key={`${id}-${attr}`}
-                  className="border text-sm text-center w-full shadow-none"
-                >
-                  {(() => {
-                    const ship = gameState.userAnswer.find(
-                      (s) => s.position === id
-                    );
-                    const value = ship ? ship[attr as keyof ShipAttribute] : "";
-
-                    return value ? (
-                      <CardContent className="text-center py-2">
-                        <Text as="p" className="font-semibold text-md">
-                          {value}
-                        </Text>
-                      </CardContent>
-                    ) : (
-                      <CardContent className="text-center py-2 text-muted-foreground text-sm">
-                        Available
-                      </CardContent>
-                    );
-                  })()}
-                </Card>
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        {isMobile ? (
+          <Carousel
+            opts={{
+              align: "center"
+            }}
+            className="mt-4 max-w-[80%] mx-auto mb-60"
+          >
+            <CarouselContent>
+              {containers.map((id) => (
+                <CarouselItem key={id} className="max-w-[300px]">
+                  <div key={id} className="flex flex-col gap-2">
+                    <div className="text-center font-semibold mb-2">
+                      Position #{id}
+                    </div>
+                    {[
+                      "nationality",
+                      "departureTime",
+                      "cargo",
+                      "chimneyColor",
+                      "destination"
+                    ].map((attr) => (
+                      <Droppable
+                        key={`${id}-${attr}`}
+                        id={`${id}-${attr}`}
+                        accept={attr}
+                      >
+                        {(() => {
+                          const ship = gameState.userAnswer.find(
+                            (s) => s.position === id
+                          );
+                          const value = ship
+                            ? ship[attr as keyof ShipAttribute]
+                            : "";
+                          return value ? (
+                            <CardContent className="text-center py-2">
+                              <Text as="p" className="font-semibold text-md">
+                                {value}
+                              </Text>
+                            </CardContent>
+                          ) : (
+                            <CardContent className="text-center py-2 text-muted-foreground text-sm">
+                              {attr}
+                            </CardContent>
+                          );
+                        })()}
+                      </Droppable>
+                    ))}
+                  </div>
+                </CarouselItem>
               ))}
-            </Droppable>
-          ))}
-        </div>
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        ) : (
+          <div className="grid grid-cols-5 gap-4 mt-4 mb-48">
+            {containers.map((id) => (
+              <div key={id} className="flex flex-col gap-2">
+                <div className="text-center font-semibold mb-2">
+                  Position #{id}
+                </div>
+                {[
+                  "nationality",
+                  "departureTime",
+                  "cargo",
+                  "chimneyColor",
+                  "destination"
+                ].map((attr) => (
+                  <Droppable
+                    key={`${id}-${attr}`}
+                    id={`${id}-${attr}`}
+                    accept={attr}
+                  >
+                    {(() => {
+                      const ship = gameState.userAnswer.find(
+                        (s) => s.position === id
+                      );
+                      const value = ship
+                        ? ship[attr as keyof ShipAttribute]
+                        : "";
+                      return value ? (
+                        <CardContent className="text-center py-2">
+                          <Text as="p" className="font-semibold text-md">
+                            {value}
+                          </Text>
+                        </CardContent>
+                      ) : (
+                        <CardContent className="text-center py-2 text-muted-foreground text-sm">
+                          {attr}
+                        </CardContent>
+                      );
+                    })()}
+                  </Droppable>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* ANSWER OPTION CONTAINER */}
-        <Tabs
-          defaultValue="nationality"
-          className="border-1 p-2 bg-secondary/50 backdrop-blur-sm left-4 right-4 rounded-lg mt-5 mx-auto fixed bottom-10 w-[calc(100%-32px)] 2xl:left-50 2xl:right-50 lg:max-w-6xl lg:w-auto"
-        >
-          <TabsList>
-            <TabsTrigger value="nationality">Nationality</TabsTrigger>
-            <TabsTrigger value="departureTime">Departure Time</TabsTrigger>
-            <TabsTrigger value="cargo">Cargo</TabsTrigger>
-            <TabsTrigger value="chimneyColor">Chimney Color</TabsTrigger>
-            <TabsTrigger value="destination">Destination</TabsTrigger>
-          </TabsList>
-          <TabsContent
-            value="nationality"
-            className="m-1 rounded-sm flex gap-4"
+        <ScrollArea className="w-full max-w-full md:max-w-4xl mx-auto mb-2 rounded-lg border bg-secondary/50">
+          <Tabs
+            defaultValue="nationality"
+            className="border-1 p-2 backdrop-blur-sm left-4 right-4 rounded-lg mt-5 mx-auto fixed bottom-10 w-[calc(100%-32px)] 2xl:left-50 2xl:right-50 lg:max-w-6xl lg:w-auto"
+            style={{ minWidth: 0 }}
           >
-            {ATTRIBUTE.nationality.map((value: any) => {
-              const isAlreadyUsed = gameState.userAnswer.some(
-                (s) => s["nationality" as keyof ShipAttribute] === value
-              );      
+            <TabsList className="flex-wrap flex h-fit w-full">
+              <TabsTrigger value="nationality">Nationality</TabsTrigger>
+              <TabsTrigger value="departureTime">Departure Time</TabsTrigger>
+              <TabsTrigger value="cargo">Cargo</TabsTrigger>
+              <TabsTrigger value="chimneyColor">Chimney Color</TabsTrigger>
+              <TabsTrigger value="destination">Destination</TabsTrigger>
+            </TabsList>
+            <TabsContent value="nationality" className="m-1 rounded-sm">
+              <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
+                <div className="flex gap-4 mb-6">
+                  {ATTRIBUTE.nationality.map((value: any) => {
+                    const isAlreadyUsed = gameState.userAnswer.some(
+                      (s) => s["nationality" as keyof ShipAttribute] === value
+                    );
+                    return (
+                      <Draggable
+                        key={`nat-${value}`}
+                        id={`nationality-${value}`}
+                        data={{ type: "nationality", value }}
+                        className="w-full min-w-[200px]"
+                        style={{ touchAction: "none" }}
+                      >
+                        {value}
+                      </Draggable>
+                    );
+                  })}
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </TabsContent>
+            <TabsContent value="departureTime" className="m-1 rounded-sm">
+              <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
+                <div className="flex gap-4 p-2">
+                  {ATTRIBUTE.departureTime.map((item) => (
+                    <Draggable
+                      className="w-full min-w-[200px]"
+                      key={`dep-${item}`}
+                      id={`departureTime-${item}`}
+                      data={{ type: "departureTime", value: item }}
+                      style={{ touchAction: "none" }}
+                    >
+                      {item}
+                    </Draggable>
+                  ))}
+                </div>
+              </ScrollArea>
+            </TabsContent>
+            <TabsContent value="cargo" className="m-1 rounded-sm">
+              <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
+                <div className="flex gap-4 p-2">
+                  {ATTRIBUTE.cargo.map((item) => (
+                    <Draggable
+                      className="w-full min-w-[200px]"
+                      key={`cargo-${item}`}
+                      id={`cargo-${item}`}
+                      data={{ type: "cargo", value: item }}
+                      style={{ touchAction: "none" }}
+                    >
+                      {item}
+                    </Draggable>
+                  ))}
+                </div>
+              </ScrollArea>
+            </TabsContent>
+            <TabsContent value="chimneyColor" className="m-1 rounded-sm">
+              <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
+                <div className="flex gap-4 p-2">
+                  {ATTRIBUTE.chimneyColor.map((item) => (
+                    <Draggable
+                      className="w-full min-w-[200px]"
+                      key={`chimneyColor-${item}`}
+                      id={`chimneyColor-${item}`}
+                      data={{ type: "chimneyColor", value: item }}
+                      style={{ touchAction: "none" }}
+                    >
+                      {item}
+                    </Draggable>
+                  ))}
+                </div>
+              </ScrollArea>
+            </TabsContent>
+            <TabsContent value="destination" className="m-1 rounded-sm">
+              <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
+                <div className="flex gap-4 p-2">
+                  {ATTRIBUTE.destination.map((item) => (
+                    <Draggable
+                      className="w-full min-w-[200px]"
+                      key={`dest-${item}`}
+                      id={`destination-${item}`}
+                      data={{ type: "destination", value: item }}
+                      style={{ touchAction: "none" }}
+                    >
+                      {item}
+                    </Draggable>
+                  ))}
+                </div>
+              </ScrollArea>
+            </TabsContent>
+          </Tabs>
+        </ScrollArea>
 
-              return (
-                <Draggable
-                  key={`nat-${value}`}
-                  id={`nationality-${value}`}
-                  data={{ type: "nationality", value }}
-                  className="w-full"
-                >
-                  {value}
-                </Draggable>
-              );
-            })}
-          </TabsContent>
-          <TabsContent
-            value="departureTime"
-            className="m-1 rounded-sm flex gap-4"
-          >
-            {ATTRIBUTE.departureTime.map((item) => (
-              <Draggable
-                className="w-full"
-                key={`dep-${item}`}
-                id={`departureTime-${item}`}
-                data={{ type: "departureTime", value: item }}
-              >
-                {item}
-              </Draggable>
-            ))}
-          </TabsContent>
-          <TabsContent value="cargo" className="m-1 rounded-sm flex gap-4">
-            {ATTRIBUTE.cargo.map((item) => (
-              <Draggable
-                className="w-full"
-                key={`cargo-${item}`}
-                id={`cargo-${item}`}
-                data={{ type: "cargo", value: item }}
-              >
-                {item}
-              </Draggable>
-            ))}
-          </TabsContent>
-          <TabsContent
-            value="chimneyColor"
-            className="m-1 rounded-sm flex gap-4"
-          >
-            {ATTRIBUTE.chimneyColor.map((item) => (
-              <Draggable
-                className="w-full"
-                key={`chimneyColor-${item}`}
-                id={`chimneyColor-${item}`}
-                data={{ type: "chimneyColor", value: item }}
-              >
-                {item}
-              </Draggable>
-            ))}
-          </TabsContent>
-          <TabsContent
-            value="destination"
-            className="m-1 rounded-sm flex gap-4"
-          >
-            {ATTRIBUTE.destination.map((item) => (
-              <Draggable
-                className="w-full"
-                key={`dest-${item}`}
-                id={`destination-${item}`}
-                data={{ type: "destination", value: item }}
-              >
-                {item}
-              </Draggable>
-            ))}
-          </TabsContent>
-        </Tabs>
+        <DragOverlay
+          dropAnimation={{
+            ...defaultDropAnimationSideEffects(null),
+            duration: 300
+          }}
+        >
+          {activeDragData ? (
+            <Card className="absolute top-0 w-full h-full border-1 grid place-items-center">
+              <span className="font-semibold text-md">
+                {activeDragData.value}
+              </span>
+            </Card>
+          ) : null}
+        </DragOverlay>
       </DndContext>
     </>
   );
 
+  function handleDragStart(event: any) {
+    setActiveID(event.active.id);
+    setActiveDragData(event.active.data.current);
+  }
+
   function handleDragEnd(event: any) {
+    setActiveID(null);
+    setActiveDragData(null);
     const { active, over } = event;
 
     if (!over || !active) return;
 
-    const droppedPosition = Number(over.id); // e.g., 1–5
-    const [attribute, value] = active.id.split("-"); // e.g., "nationality", "Greek"
-
-    // Get current answer state
+    const [overPosition, overAttr] = over.id.split("-");
+    const [attribute, value] = active.id.split("-");
+    if (attribute !== overAttr) return;
+    const droppedPosition = Number(overPosition);
     const currentAnswer = [...gameState.userAnswer];
     const ship = currentAnswer.find((s) => s.position === droppedPosition);
-
     if (ship && attribute in ship) {
       (ship as any)[attribute] = value;
     }
-
     updateState({ userAnswer: currentAnswer });
-
-    console.log(gameState.userAnswer);
   }
 });
 

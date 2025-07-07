@@ -1,27 +1,30 @@
 import { useDraggable } from "@dnd-kit/core";
 import { Card, CardContent } from "@/components/ui/card";
-import { toast } from "sonner";
 
 export function Draggable(props: any) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: props.id
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: props.id,
+    data: props.data || {},
   });
   const style = transform
     ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        transition: isDragging ? 'none' : 'transform 300ms cubic-bezier(0.22, 1, 0.36, 1)',
+        zIndex: isDragging ? 50 : undefined,
       }
     : undefined;
 
   return (
     <button
       ref={setNodeRef}
-      style={style}
+      style={{ ...style, ...props.style }}
       {...listeners}
       {...attributes}
-      className={props.className}
+      className={props.className + (isDragging ? " opacity-70" : "") + " cursor-grab"}
+      tabIndex={0}
     >
       <Card className="w-full h-full border-1 grid place-items-center">
-        <CardContent>{props.children}</CardContent>
+        <CardContent>{props.children || props.value}</CardContent>
       </Card>
     </button>
   );
