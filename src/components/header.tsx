@@ -19,7 +19,9 @@ const Header = () => {
     >
       {isBeingPlayed ? (
         <>
-          <Text as="h4">Boatly - The Impossible Game</Text>
+          <Text as="h4" className="lg:block hidden">
+            Boatly - The Impossible Game
+          </Text>
 
           <Text as="h4" className="lg:hidden block">
             Boatly

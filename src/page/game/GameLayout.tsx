@@ -12,7 +12,13 @@ import {
   DrawerTrigger
 } from "@/components/ui/drawer";
 import { Text } from "@/components/ui/text";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
@@ -37,7 +43,9 @@ import { defaultDropAnimationSideEffects } from "@dnd-kit/core";
 import { useTimer } from "@/hooks/useTimer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ScrollBar } from "@/components/ui/scroll-area";
-
+import { Particles } from "@/components/magicui/particles";
+import { useNavigate } from "react-router-dom";
+import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
 const GameLayout = memo(() => {
   const { gameState, updateState } = useGameState();
   const isMobile = useIsMobile();
@@ -73,8 +81,19 @@ const GameLayout = memo(() => {
     console.log(gameState);
   });
 
+  const Navigate = useNavigate();
+
+  const NavigateToHome = () => {
+    Navigate("/");
+  };
+
   return (
     <>
+      {!isMobile && (
+        <div className="fixed left-0 -z-10 overflow-hidden w-full h-full">
+          <Particles quantity={200} />
+        </div>
+      )}
       {/* CLUE */}
       <div className="flex justify-between items-center gap-4">
         <Drawer>
@@ -143,7 +162,7 @@ const GameLayout = memo(() => {
             opts={{
               align: "center"
             }}
-            className="mt-4 max-w-[80%] mx-auto mb-60"
+            className="mt-4 max-w-[80%] mx-auto mb-80"
           >
             <CarouselContent>
               {containers.map((id) => (
@@ -238,271 +257,274 @@ const GameLayout = memo(() => {
         )}
 
         {/* ANSWER OPTION CONTAINER */}
-        <ScrollArea className="w-full max-w-full md:max-w-4xl mx-auto mb-2 rounded-lg border bg-secondary/50">
+        <ScrollArea className="w-full max-w-full md:max-w-4xl mx-auto mb-2">
           <Tabs
             defaultValue="nationality"
-            className="border-1 p-2 backdrop-blur-sm left-4 right-4 rounded-lg mt-5 mx-auto fixed bottom-10 w-[calc(100%-32px)] 2xl:left-50 2xl:right-50 lg:max-w-6xl lg:w-auto"
+            className="backdrop-blur-sm left-4 right-4 rounded-lg mt-5 mx-auto fixed bottom-4 w-[calc(100%-32px)] 2xl:left-50 2xl:right-50 lg:max-w-6xl lg:w-auto"
             style={{ minWidth: 0 }}
           >
-            <TabsList className="flex-wrap flex h-fit w-full">
-              <TabsTrigger value="nationality">Nationality</TabsTrigger>
-              <TabsTrigger value="departureTime">Departure Time</TabsTrigger>
-              <TabsTrigger value="cargo">Cargo</TabsTrigger>
-              <TabsTrigger value="chimneyColor">Chimney Color</TabsTrigger>
-              <TabsTrigger value="destination">Destination</TabsTrigger>
-            </TabsList>
-            <TabsContent value="nationality" className="m-1 rounded-sm">
-              <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
-                <div className="flex gap-4 mb-6">
-                  {ATTRIBUTE.nationality.map((value: any) => {
-                    const isAlreadyUsed = gameState.userAnswer.some(
-                      (s) => s["nationality" as keyof ShipAttribute] === value
-                    );
-                    return (
-                      <Draggable
-                        key={`nat-${value}`}
-                        id={`nationality-${value}`}
-                        data={{ type: "nationality", value }}
-                        className={
-                          "w-full min-w-[200px] " +
-                          (isAlreadyUsed
-                            ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
-                            : " border rounded-2xl border-2")
-                        }
-                        style={{ touchAction: "none" }}
-                        disabled={isAlreadyUsed}
-                      >
-                        <span className="flex items-center justify-center">
-                          {value}
-                          {isAlreadyUsed && (
-                            <span className="ml-2  text-foreground text-xs font-bold flex items-center gap-1">
-                              <svg
-                                width="16"
-                                height="16"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                              Used
-                            </span>
-                          )}
-                        </span>
-                      </Draggable>
-                    );
-                  })}
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </TabsContent>
-            <TabsContent value="departureTime" className="m-1 rounded-sm">
-              <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
-                <div className="flex gap-4 mb-6">
-                  {ATTRIBUTE.departureTime.map((item) => {
-                    const isAlreadyUsed = gameState.userAnswer.some(
-                      (s) => s["departureTime" as keyof ShipAttribute] === item
-                    );
+            <NeonGradientCard>
+              <TabsList className="flex-wrap flex h-fit w-full">
+                <TabsTrigger value="nationality">Nationality</TabsTrigger>
+                <TabsTrigger value="departureTime">Departure Time</TabsTrigger>
+                <TabsTrigger value="cargo">Cargo</TabsTrigger>
+                <TabsTrigger value="chimneyColor">Chimney Color</TabsTrigger>
+                <TabsTrigger value="destination">Destination</TabsTrigger>
+              </TabsList>
+              <TabsContent value="nationality" className="m-1 rounded-sm">
+                <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
+                  <div className="flex gap-4 mb-6">
+                    {ATTRIBUTE.nationality.map((value: any) => {
+                      const isAlreadyUsed = gameState.userAnswer.some(
+                        (s) => s["nationality" as keyof ShipAttribute] === value
+                      );
+                      return (
+                        <Draggable
+                          key={`nat-${value}`}
+                          id={`nationality-${value}`}
+                          data={{ type: "nationality", value }}
+                          className={
+                            "w-full min-w-[200px] " +
+                            (isAlreadyUsed
+                              ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
+                              : " border rounded-2xl border-2")
+                          }
+                          style={{ touchAction: "none" }}
+                          disabled={isAlreadyUsed}
+                        >
+                          <span className="flex items-center justify-center">
+                            {value}
+                            {isAlreadyUsed && (
+                              <span className="ml-2  text-foreground text-xs font-bold flex items-center gap-1">
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                Used
+                              </span>
+                            )}
+                          </span>
+                        </Draggable>
+                      );
+                    })}
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+              </TabsContent>
+              <TabsContent value="departureTime" className="m-1 rounded-sm">
+                <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
+                  <div className="flex gap-4 mb-6">
+                    {ATTRIBUTE.departureTime.map((item) => {
+                      const isAlreadyUsed = gameState.userAnswer.some(
+                        (s) =>
+                          s["departureTime" as keyof ShipAttribute] === item
+                      );
 
-                    return (
-                      <Draggable
-                        className={
-                          "w-full min-w-[200px]" +
-                          (isAlreadyUsed
-                            ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
-                            : " border rounded-2xl border-2")
-                        }
-                        key={`dep-${item}`}
-                        id={`departureTime-${item}`}
-                        data={{ type: "departureTime", value: item }}
-                        style={{ touchAction: "none" }}
-                        disabled={isAlreadyUsed}
-                      >
-                        <span className="flex items-center justify-center">
-                          {item}
-                          {isAlreadyUsed && (
-                            <span className="ml-2  text-foreground text-xs font-bold flex items-center gap-1">
-                              <svg
-                                width="16"
-                                height="16"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                              Used
-                            </span>
-                          )}
-                        </span>
-                      </Draggable>
-                    );
-                  })}
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </TabsContent>
-            <TabsContent value="cargo" className="m-1 rounded-sm">
-              <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
-                <div className="flex gap-4 mb-6">
-                  {ATTRIBUTE.cargo.map((item) => {
-                    const isAlreadyUsed = gameState.userAnswer.some(
-                      (s) => s["cargo" as keyof ShipAttribute] === item
-                    );
-                    return (
-                      <Draggable
-                        className={
-                          "w-full min-w-[200px]" +
-                          (isAlreadyUsed
-                            ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
-                            : " border rounded-2xl border-2")
-                        }
-                        key={`cargo-${item}`}
-                        id={`cargo-${item}`}
-                        data={{ type: "cargo", value: item }}
-                        style={{ touchAction: "none" }}
-                        disabled={isAlreadyUsed}
-                      >
-                        <span className="flex items-center justify-center">
-                          {item}
-                          {isAlreadyUsed && (
-                            <span className="ml-2  text-foreground text-xs font-bold flex items-center gap-1">
-                              <svg
-                                width="16"
-                                height="16"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                              Used
-                            </span>
-                          )}
-                        </span>
-                      </Draggable>
-                    );
-                  })}
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </TabsContent>
-            <TabsContent value="chimneyColor" className="m-1 rounded-sm">
-              <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
-                <div className="flex gap-4 mb-6">
-                  {ATTRIBUTE.chimneyColor.map((item) => {
-                    const isAlreadyUsed = gameState.userAnswer.some(
-                      (s) => s["chimneyColor" as keyof ShipAttribute] === item
-                    );
-                    return (
-                      <Draggable
-                        className={
-                          "w-full min-w-[200px]" +
-                          (isAlreadyUsed
-                            ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
-                            : " border rounded-2xl border-2")
-                        }
-                        key={`chimneyColor-${item}`}
-                        id={`chimneyColor-${item}`}
-                        data={{ type: "chimneyColor", value: item }}
-                        style={{ touchAction: "none" }}
-                        disabled={isAlreadyUsed}
-                      >
-                        <span className="flex items-center justify-center">
-                          {item}
-                          {isAlreadyUsed && (
-                            <span className="ml-2  text-foreground text-xs font-bold flex items-center gap-1">
-                              <svg
-                                width="16"
-                                height="16"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                              Used
-                            </span>
-                          )}
-                        </span>
-                      </Draggable>
-                    );
-                  })}
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </TabsContent>
-            <TabsContent value="destination" className="m-1 rounded-sm">
-              <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
-                <div className="flex gap-4 mb-6">
-                  {ATTRIBUTE.destination.map((item) => {
-                    const isAlreadyUsed = gameState.userAnswer.some(
-                      (s) => s["destination" as keyof ShipAttribute] === item
-                    );
+                      return (
+                        <Draggable
+                          className={
+                            "w-full min-w-[200px]" +
+                            (isAlreadyUsed
+                              ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
+                              : " border rounded-2xl border-2")
+                          }
+                          key={`dep-${item}`}
+                          id={`departureTime-${item}`}
+                          data={{ type: "departureTime", value: item }}
+                          style={{ touchAction: "none" }}
+                          disabled={isAlreadyUsed}
+                        >
+                          <span className="flex items-center justify-center">
+                            {item}
+                            {isAlreadyUsed && (
+                              <span className="ml-2  text-foreground text-xs font-bold flex items-center gap-1">
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                Used
+                              </span>
+                            )}
+                          </span>
+                        </Draggable>
+                      );
+                    })}
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+              </TabsContent>
+              <TabsContent value="cargo" className="m-1 rounded-sm">
+                <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
+                  <div className="flex gap-4 mb-6">
+                    {ATTRIBUTE.cargo.map((item) => {
+                      const isAlreadyUsed = gameState.userAnswer.some(
+                        (s) => s["cargo" as keyof ShipAttribute] === item
+                      );
+                      return (
+                        <Draggable
+                          className={
+                            "w-full min-w-[200px]" +
+                            (isAlreadyUsed
+                              ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
+                              : " border rounded-2xl border-2")
+                          }
+                          key={`cargo-${item}`}
+                          id={`cargo-${item}`}
+                          data={{ type: "cargo", value: item }}
+                          style={{ touchAction: "none" }}
+                          disabled={isAlreadyUsed}
+                        >
+                          <span className="flex items-center justify-center">
+                            {item}
+                            {isAlreadyUsed && (
+                              <span className="ml-2  text-foreground text-xs font-bold flex items-center gap-1">
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                Used
+                              </span>
+                            )}
+                          </span>
+                        </Draggable>
+                      );
+                    })}
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+              </TabsContent>
+              <TabsContent value="chimneyColor" className="m-1 rounded-sm">
+                <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
+                  <div className="flex gap-4 mb-6">
+                    {ATTRIBUTE.chimneyColor.map((item) => {
+                      const isAlreadyUsed = gameState.userAnswer.some(
+                        (s) => s["chimneyColor" as keyof ShipAttribute] === item
+                      );
+                      return (
+                        <Draggable
+                          className={
+                            "w-full min-w-[200px]" +
+                            (isAlreadyUsed
+                              ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
+                              : " border rounded-2xl border-2")
+                          }
+                          key={`chimneyColor-${item}`}
+                          id={`chimneyColor-${item}`}
+                          data={{ type: "chimneyColor", value: item }}
+                          style={{ touchAction: "none" }}
+                          disabled={isAlreadyUsed}
+                        >
+                          <span className="flex items-center justify-center">
+                            {item}
+                            {isAlreadyUsed && (
+                              <span className="ml-2  text-foreground text-xs font-bold flex items-center gap-1">
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                Used
+                              </span>
+                            )}
+                          </span>
+                        </Draggable>
+                      );
+                    })}
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+              </TabsContent>
+              <TabsContent value="destination" className="m-1 rounded-sm">
+                <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
+                  <div className="flex gap-4 mb-6">
+                    {ATTRIBUTE.destination.map((item) => {
+                      const isAlreadyUsed = gameState.userAnswer.some(
+                        (s) => s["destination" as keyof ShipAttribute] === item
+                      );
 
-                    return (
-                      <Draggable
-                        className={
-                          "w-full min-w-[200px]" +
-                          (isAlreadyUsed
-                            ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
-                            : " border rounded-2xl border-2")
-                        }
-                        key={`dest-${item}`}
-                        id={`destination-${item}`}
-                        data={{ type: "destination", value: item }}
-                        style={{ touchAction: "none" }}
-                        disabled={isAlreadyUsed}
-                      >
-                        <span className="flex items-center justify-center">
-                          {item}
-                          {isAlreadyUsed && (
-                            <span className="ml-2  text-foreground text-xs font-bold flex items-center gap-1">
-                              <svg
-                                width="16"
-                                height="16"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                              Used
-                            </span>
-                          )}
-                        </span>
-                      </Draggable>
-                    );
-                  })}
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </TabsContent>
+                      return (
+                        <Draggable
+                          className={
+                            "w-full min-w-[200px]" +
+                            (isAlreadyUsed
+                              ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
+                              : " border rounded-2xl border-2")
+                          }
+                          key={`dest-${item}`}
+                          id={`destination-${item}`}
+                          data={{ type: "destination", value: item }}
+                          style={{ touchAction: "none" }}
+                          disabled={isAlreadyUsed}
+                        >
+                          <span className="flex items-center justify-center">
+                            {item}
+                            {isAlreadyUsed && (
+                              <span className="ml-2  text-foreground text-xs font-bold flex items-center gap-1">
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                Used
+                              </span>
+                            )}
+                          </span>
+                        </Draggable>
+                      );
+                    })}
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+              </TabsContent>
+            </NeonGradientCard>
           </Tabs>
         </ScrollArea>
 
@@ -521,6 +543,64 @@ const GameLayout = memo(() => {
           ) : null}
         </DragOverlay>
       </DndContext>
+      {hasGameEnded()
+        ? (() => {
+            // Calculate correct and incorrect answers
+            const correct = gameState.userAnswer.reduce((acc, userShip) => {
+              const solShip = gameState.solution.find(
+                (s) => s.position === userShip.position
+              );
+              if (!solShip) return acc;
+              let shipCorrect = 0;
+              [
+                "nationality",
+                "departureTime",
+                "cargo",
+                "chimneyColor",
+                "destination"
+              ].forEach((attr) => {
+                if (
+                  userShip[attr as keyof ShipAttribute] ===
+                  solShip[attr as keyof ShipAttribute]
+                )
+                  shipCorrect++;
+              });
+              return acc + shipCorrect;
+            }, 0);
+            const total = gameState.userAnswer.length * 5;
+            const incorrect = total - correct;
+            return (
+              <div className="bg-black/50 grid place-items-center backdrop-blur-xs fixed left-0 top-0 w-full h-full z-[100]">
+                <Card className="w-full max-w-lg">
+                  <CardHeader>
+                    <CardTitle>Your Result</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex gap-4 items-center">
+                      <div className="p-4 w-full rounded-lg border dark:bg-green-950 bg-green-200 dark:text-green-300 text-green-700 dark:border-green-300 border-green-800">
+                        <Text as="p" className="font-semibold">
+                          Correctly Answer
+                        </Text>
+                        <Text as="h1">{correct}</Text>
+                      </div>
+                      <div className="p-4 w-full rounded-lg border dark:bg-red-950 dark:text-red-200 text-red-800 bg-red-300 dark:border-red-300 border-red-800">
+                        <Text as="p" className="font-semibold">
+                          InCorrectly Answer
+                        </Text>
+                        <Text as="h1">{incorrect}</Text>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="justify-end flex items-center gap-4">
+                    <Button onClick={NavigateToHome}>
+                      Return to Main Menu
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </div>
+            );
+          })()
+        : null}
     </>
   );
 
