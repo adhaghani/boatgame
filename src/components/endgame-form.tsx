@@ -42,9 +42,10 @@ const EndGameForm = () => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>End the game now?</DialogTitle>
+          <DialogTitle>End the game now, {gameState.username}?</DialogTitle>
           <DialogDescription>
-            Are you sure you want to end the game now?
+            Are you sure you want to end the game now? if the time is belowa
+            minute, the attempt won't be saved.
           </DialogDescription>
         </DialogHeader>
 
