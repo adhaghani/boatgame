@@ -11,20 +11,17 @@ import {
   DialogClose
 } from "./ui/dialog";
 
-import { useNavigate } from "react-router-dom";
 import { submitAnswer } from "@/puzzle";
 
 const EndGameForm = () => {
   const { gameState, updateState } = useGameState();
-
-  const Navigate = useNavigate();
 
   const onEndGame = () => {
     const now = new Date();
     const start = new Date(gameState.startTime);
     const timeTaken = Math.floor((now.getTime() - start.getTime()) / 1000);
 
-    const result = submitAnswer({
+    submitAnswer({
       userAnswer: gameState.userAnswer,
       solution: gameState.solution,
       difficulty: gameState.difficulty,
@@ -36,7 +33,6 @@ const EndGameForm = () => {
       ...gameState,
       gameStatus: "completed"
     });
-    Navigate("/");
   };
 
   return (
