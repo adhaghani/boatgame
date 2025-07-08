@@ -1,5 +1,5 @@
 import { useDroppable } from "@dnd-kit/core";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
 export function Droppable(props: any) {
   const { isOver, setNodeRef, active } = useDroppable({
@@ -12,8 +12,9 @@ export function Droppable(props: any) {
     <Card
       ref={setNodeRef}
       className={
-        (isAccepting ? "bg-secondary scale-105 transition-transform duration-200" : "") +
-        " transition-all"
+        (isAccepting
+          ? "bg-secondary scale-105 transition-transform duration-200"
+          : "") + " transition-all"
       }
     >
       {props.children}

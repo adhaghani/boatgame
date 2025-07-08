@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import type { Difficulty, ShipAttribute, GameState, GameStatus } from "@/types";
+import type { GameState } from "@/types";
 
 const LOCAL_STORAGE_KEY = "game_state";
 

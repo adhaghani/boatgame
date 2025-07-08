@@ -68,7 +68,7 @@ const GameLayout = memo(() => {
   );
 
   const containers = [1, 2, 3, 4, 5];
-  const [ActiveID, setActiveID] = useState(null);
+  const [, setActiveID] = useState(null);
   const [activeDragData, setActiveDragData] = useState<any>(null);
 
   const time = useTimer(gameState.gameStatus === "in_progress");

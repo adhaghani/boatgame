@@ -1,5 +1,4 @@
 import { lazy } from "react";
-import { Navigate } from "react-router-dom";
 import DefaultLayout from "./page/DefaultLayout";
 
 const GameLayout = lazy(() => import("@/page/game/GameLayout"));
