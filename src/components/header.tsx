@@ -66,13 +66,15 @@ const Header = () => {
         <BlurFade inView delay={0.25}>
           <VisualModeToggle />
         </BlurFade>
-        <BlurFade inView delay={0.3}>
-          <Link to="/leaderboard">
-            <Button size="sm" variant="secondary">
-              Leaderboard
-            </Button>
-          </Link>
-        </BlurFade>
+        {isBeingPlayed ? null : (
+          <BlurFade inView delay={0.3}>
+            <Link to="/leaderboard">
+              <Button size="sm" variant="secondary">
+                Leaderboard
+              </Button>
+            </Link>
+          </BlurFade>
+        )}
       </div>
     </nav>
   );
