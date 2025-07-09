@@ -5,6 +5,7 @@ const GameLayout = lazy(() => import("@/page/game/GameLayout"));
 const HomeLayout = lazy(() => import("@/page/home/HomeLayout"));
 const ListLayout = lazy(() => import("@/page/list/ListLayout"));
 const ResultLayout = lazy(() => import("@/page/result/ResultLayout"));
+const Leaderboard = lazy(() => import("@/page/Leaderboard"));
 
 const routes = [
   {
@@ -13,22 +14,26 @@ const routes = [
     children: [
       {
         path: "",
-        element: <HomeLayout />
+        element: <HomeLayout />,
       },
       {
         path: "play",
-        element: <GameLayout />
+        element: <GameLayout />,
       },
       {
         path: "past-game",
-        element: <ListLayout />
+        element: <ListLayout />,
+      },
+      {
+        path: "leaderboard",
+        element: <Leaderboard />,
       },
       {
         path: "result",
-        element: <ResultLayout />
-      }
-    ]
-  }
+        element: <ResultLayout />,
+      },
+    ],
+  },
 ];
 
 export { routes };

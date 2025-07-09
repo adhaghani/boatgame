@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogContent,
   DialogFooter,
-  DialogClose
+  DialogClose,
 } from "@/components/ui/dialog";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import useIsMobile from "@/hooks/useIsMobile";
@@ -47,27 +47,34 @@ const HomeLayout = memo(() => {
           <Particles quantity={200} />
         </div>
       )}
-      <div className=" h-[70vh] min-h-fit py-10 grid place-items-center">
-        <div className="space-y-10">
+      <div className=" h-[60vh] min-h-fit py-4 grid place-items-center">
+        <div className="space-y-6">
           <BlurFade inView delay={0.2}>
             <Text as="h1" className="text-center">
               Hello, Welcome to <br />
               <BlurFade inView delay={0.25}>
-                <AuroraText className="text-8xl">Boatly</AuroraText>
+                <AuroraText className="text-6xl md:text-8xl">Boatly</AuroraText>
               </BlurFade>
+            </Text>
+            <Text
+              as="p"
+              className="text-center text-xs md:text-base text-muted-foreground mt-2"
+            >
+              Drag and drop the correct answers to solve the puzzle. Get all
+              correct for the best leaderboard score!
             </Text>
           </BlurFade>
           <BlurFade inView delay={0.3}>
-            <div className="grid place-items-center">
+            <div className="grid place-items-center w-full px-2 md:px-0">
               <PreGameForm />
             </div>
           </BlurFade>
           {Attempt.length > 0 && (
-            <div className="flex gap-4 items-center justify-center">
+            <div className="flex gap-2 items-center justify-center flex-wrap">
               <BlurFade inView delay={0.35}>
                 <Button
                   asChild
-                  size={"lg"}
+                  size={isMobile ? "sm" : "lg"}
                   className="flex-1"
                   variant={"default"}
                 >
@@ -78,7 +85,7 @@ const HomeLayout = memo(() => {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button
-                      size={"lg"}
+                      size={isMobile ? "sm" : "lg"}
                       className="flex-1"
                       variant={"secondary"}
                     >

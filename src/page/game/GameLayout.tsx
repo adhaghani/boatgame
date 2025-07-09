@@ -10,7 +10,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Text } from "@/components/ui/text";
 import {
@@ -18,7 +18,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -27,7 +27,7 @@ import {
   CarouselContent,
   CarouselItem,
   CarouselNext,
-  CarouselPrevious
+  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import { ATTRIBUTE, type ShipAttribute } from "@/types";
@@ -39,7 +39,7 @@ import {
   useSensors,
   TouchSensor,
   MouseSensor,
-  DragOverlay
+  DragOverlay,
 } from "@dnd-kit/core";
 import { defaultDropAnimationSideEffects } from "@dnd-kit/core";
 import { useTimer } from "@/hooks/useTimer";
@@ -56,14 +56,14 @@ const GameLayout = memo(() => {
       activationConstraint: {
         distance: 10,
         delay: 50,
-        tolerance: 5
-      }
+        tolerance: 5,
+      },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
         delay: 50,
-        tolerance: 5
-      }
+        tolerance: 5,
+      },
     })
   );
 
@@ -175,7 +175,7 @@ const GameLayout = memo(() => {
           <BlurFade inView delay={0.2}>
             <Carousel
               opts={{
-                align: "center"
+                align: "center",
               }}
               className="mt-4 max-w-[80%] mx-auto mb-80"
             >
@@ -191,7 +191,7 @@ const GameLayout = memo(() => {
                         "departureTime",
                         "cargo",
                         "chimneyColor",
-                        "destination"
+                        "destination",
                       ].map((attr) => (
                         <Droppable
                           key={`${id}-${attr}`}
@@ -228,11 +228,11 @@ const GameLayout = memo(() => {
             </Carousel>
           </BlurFade>
         ) : (
-          <div className="grid grid-cols-5 gap-4 mt-4 mb-48">
+          <div className="grid grid-cols-2 gap-1 md:grid-cols-5 md:gap-4 mt-2 md:mt-4 mb-24 md:mb-48">
             {containers.map((id) => (
-              <div key={id} className="flex flex-col gap-2">
+              <div key={id} className="flex flex-col gap-1 md:gap-2">
                 <BlurFade inView delay={0.2}>
-                  <div className="text-center font-semibold mb-2">
+                  <div className="text-center font-semibold mb-1 md:mb-2 text-xs md:text-base">
                     Position #{id}
                   </div>
                 </BlurFade>
@@ -241,7 +241,7 @@ const GameLayout = memo(() => {
                   "departureTime",
                   "cargo",
                   "chimneyColor",
-                  "destination"
+                  "destination",
                 ].map((attr) => (
                   <BlurFade inView delay={0.2}>
                     <Droppable
@@ -257,13 +257,22 @@ const GameLayout = memo(() => {
                           ? ship[attr as keyof ShipAttribute]
                           : "";
                         return value ? (
-                          <CardContent className="text-center py-2 ">
-                            <Text as="p" className="font-semibold text-md">
+                          <CardContent
+                            className="text-center py-1 md:py-2 text-xs md:text-base"
+                            title="This is your selected answer. Drag to change."
+                          >
+                            <Text
+                              as="p"
+                              className="font-semibold text-xs md:text-md"
+                            >
                               {value}
                             </Text>
                           </CardContent>
                         ) : (
-                          <CardContent className="text-center py-2 text-muted-foreground text-sm">
+                          <CardContent
+                            className="text-center py-1 md:py-2 text-muted-foreground text-xs md:text-sm"
+                            title="Drop the correct answer here"
+                          >
                             {attr === "departureTime"
                               ? "departure time"
                               : attr === "chimneyColor"
@@ -289,7 +298,7 @@ const GameLayout = memo(() => {
           >
             <BlurFade delay={0.3} inView>
               <NeonGradientCard>
-                <TabsList className="flex-wrap flex mb-4 h-fit w-full">
+                <TabsList className="flex-wrap flex mb-2 md:mb-4 h-fit w-full text-xs md:text-base">
                   <TabsTrigger value="nationality">Nationality</TabsTrigger>
                   <TabsTrigger value="departureTime">
                     Departure Time
@@ -299,8 +308,8 @@ const GameLayout = memo(() => {
                   <TabsTrigger value="destination">Destination</TabsTrigger>
                 </TabsList>
                 <TabsContent value="nationality" className="m-1 rounded-sm">
-                  <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
-                    <div className="flex gap-4 mb-6">
+                  <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-2 md:gap-4">
+                    <div className="flex gap-2 md:gap-4 mb-2 md:mb-6">
                       {ATTRIBUTE.nationality.map((value: any) => {
                         const isAlreadyUsed = gameState.userAnswer.some(
                           (s) =>
@@ -312,13 +321,18 @@ const GameLayout = memo(() => {
                             id={`nationality-${value}`}
                             data={{ type: "nationality", value }}
                             className={
-                              "w-full min-w-[200px] " +
+                              "w-full min-w-[120px] md:min-w-[200px]" +
                               (isAlreadyUsed
-                                ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
-                                : " border rounded-2xl border-2")
+                                ? " opacity-50 rounded-2xl border-dashed border-red-400 border-2"
+                                : " rounded-2xl border-2")
                             }
                             style={{ touchAction: "none" }}
                             disabled={isAlreadyUsed}
+                            title={
+                              isAlreadyUsed
+                                ? "Already used in another slot"
+                                : "Drag to answer"
+                            }
                           >
                             <span className="flex items-center justify-center font-semibold">
                               {value}
@@ -350,8 +364,8 @@ const GameLayout = memo(() => {
                   </ScrollArea>
                 </TabsContent>
                 <TabsContent value="departureTime" className="m-1 rounded-sm">
-                  <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
-                    <div className="flex gap-4 mb-6">
+                  <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-2 md:gap-4">
+                    <div className="flex gap-2 md:gap-4 mb-2 md:mb-6">
                       {ATTRIBUTE.departureTime.map((item) => {
                         const isAlreadyUsed = gameState.userAnswer.some(
                           (s) =>
@@ -364,7 +378,7 @@ const GameLayout = memo(() => {
                               "w-full min-w-[200px]" +
                               (isAlreadyUsed
                                 ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
-                                : " border rounded-2xl border-2")
+                                : " rounded-2xl border-2")
                             }
                             key={`dep-${item}`}
                             id={`departureTime-${item}`}
@@ -402,8 +416,8 @@ const GameLayout = memo(() => {
                   </ScrollArea>
                 </TabsContent>
                 <TabsContent value="cargo" className="m-1 rounded-sm">
-                  <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
-                    <div className="flex gap-4 mb-6">
+                  <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-2 md:gap-4">
+                    <div className="flex gap-2 md:gap-4 mb-2 md:mb-6">
                       {ATTRIBUTE.cargo.map((item) => {
                         const isAlreadyUsed = gameState.userAnswer.some(
                           (s) => s["cargo" as keyof ShipAttribute] === item
@@ -414,7 +428,7 @@ const GameLayout = memo(() => {
                               "w-full min-w-[200px]" +
                               (isAlreadyUsed
                                 ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
-                                : " border rounded-2xl border-2")
+                                : " rounded-2xl border-2")
                             }
                             key={`cargo-${item}`}
                             id={`cargo-${item}`}
@@ -452,8 +466,8 @@ const GameLayout = memo(() => {
                   </ScrollArea>
                 </TabsContent>
                 <TabsContent value="chimneyColor" className="m-1 rounded-sm">
-                  <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
-                    <div className="flex gap-4 mb-6">
+                  <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-2 md:gap-4">
+                    <div className="flex gap-2 md:gap-4 mb-2 md:mb-6">
                       {ATTRIBUTE.chimneyColor.map((item) => {
                         const isAlreadyUsed = gameState.userAnswer.some(
                           (s) =>
@@ -465,7 +479,7 @@ const GameLayout = memo(() => {
                               "w-full min-w-[200px]" +
                               (isAlreadyUsed
                                 ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
-                                : " border rounded-2xl border-2")
+                                : " rounded-2xl border-2")
                             }
                             key={`chimneyColor-${item}`}
                             id={`chimneyColor-${item}`}
@@ -503,8 +517,8 @@ const GameLayout = memo(() => {
                   </ScrollArea>
                 </TabsContent>
                 <TabsContent value="destination" className="m-1 rounded-sm">
-                  <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-4">
-                    <div className="flex gap-4 mb-6">
+                  <ScrollArea className="w-full max-w-full overflow-x-auto whitespace-nowrap flex gap-2 md:gap-4">
+                    <div className="flex gap-2 md:gap-4 mb-2 md:mb-6">
                       {ATTRIBUTE.destination.map((item) => {
                         const isAlreadyUsed = gameState.userAnswer.some(
                           (s) =>
@@ -517,7 +531,7 @@ const GameLayout = memo(() => {
                               "w-full min-w-[200px]" +
                               (isAlreadyUsed
                                 ? " opacity-50  rounded-2xl border-dashed border-red-400 border-2"
-                                : " border rounded-2xl border-2")
+                                : " rounded-2xl border-2")
                             }
                             key={`dest-${item}`}
                             id={`destination-${item}`}
@@ -562,7 +576,7 @@ const GameLayout = memo(() => {
         <DragOverlay
           dropAnimation={{
             ...defaultDropAnimationSideEffects(null),
-            duration: 300
+            duration: 300,
           }}
         >
           {activeDragData ? (
@@ -588,7 +602,7 @@ const GameLayout = memo(() => {
                 "departureTime",
                 "cargo",
                 "chimneyColor",
-                "destination"
+                "destination",
               ].forEach((attr) => {
                 if (
                   userShip[attr as keyof ShipAttribute] ===

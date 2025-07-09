@@ -1,11 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useGameState } from "@/context/gameStateContext";
 import React, {
   type ComponentPropsWithoutRef,
   useEffect,
   useRef,
-  useState
+  useState,
 } from "react";
 interface MousePosition {
   x: number;
@@ -15,7 +16,7 @@ interface MousePosition {
 function MousePosition(): MousePosition {
   const [mousePosition, setMousePosition] = useState<MousePosition>({
     x: 0,
-    y: 0
+    y: 0,
   });
 
   useEffect(() => {
@@ -87,6 +88,10 @@ export const Particles: React.FC<ParticlesProps> = ({
   vy = 0,
   ...props
 }) => {
+  const { gameState } = useGameState();
+  const visualMode = gameState?.visualMode || "visual";
+  if (visualMode === "performance") return null;
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const context = useRef<CanvasRenderingContext2D | null>(null);
@@ -195,7 +200,7 @@ export const Particles: React.FC<ParticlesProps> = ({
       targetAlpha,
       dx,
       dy,
-      magnetism
+      magnetism,
     };
   };
 
@@ -257,7 +262,7 @@ export const Particles: React.FC<ParticlesProps> = ({
         circle.x + circle.translateX - circle.size, // distance from left edge
         canvasSize.current.w - circle.x - circle.translateX - circle.size, // distance from right edge
         circle.y + circle.translateY - circle.size, // distance from top edge
-        canvasSize.current.h - circle.y - circle.translateY - circle.size // distance from bottom edge
+        canvasSize.current.h - circle.y - circle.translateY - circle.size, // distance from bottom edge
       ];
       const closestEdge = edge.reduce((a, b) => Math.min(a, b));
       const remapClosestEdge = parseFloat(

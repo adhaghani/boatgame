@@ -6,9 +6,10 @@ import {
   useInView,
   type UseInViewOptions,
   type Variants,
-  type MotionProps
+  type MotionProps,
 } from "motion/react";
 import { useRef } from "react";
+import { useGameState } from "@/context/gameStateContext";
 
 type MarginType = UseInViewOptions["margin"];
 
@@ -41,6 +42,8 @@ export function BlurFade({
   blur = "6px",
   ...props
 }: BlurFadeProps) {
+  const { gameState } = useGameState();
+  const visualMode = gameState?.visualMode || "visual";
   const ref = useRef(null);
   const inViewResult = useInView(ref, { once: true, margin: inViewMargin });
   const isInView = !inView || inViewResult;
@@ -48,14 +51,14 @@ export function BlurFade({
     hidden: {
       [direction === "left" || direction === "right" ? "x" : "y"]:
         direction === "right" || direction === "down" ? -offset : offset,
-      opacity: 0,
-      filter: `blur(${blur})`
+      opacity: visualMode === "performance" ? 1 : 0,
+      filter: visualMode === "performance" ? "none" : `blur(${blur})`,
     },
     visible: {
       [direction === "left" || direction === "right" ? "x" : "y"]: 0,
       opacity: 1,
-      filter: `blur(0px)`
-    }
+      filter: visualMode === "performance" ? "none" : `blur(0px)`,
+    },
   };
   const combinedVariants = variant || defaultVariants;
   return (
@@ -68,8 +71,8 @@ export function BlurFade({
         variants={combinedVariants}
         transition={{
           delay: 0.04 + delay,
-          duration,
-          ease: "easeOut"
+          duration: visualMode === "performance" ? 0 : duration,
+          ease: "easeOut",
         }}
         className={className}
         {...props}

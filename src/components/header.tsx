@@ -6,6 +6,7 @@ import EndGameForm from "./endgame-form";
 import { useGameState } from "@/context/gameStateContext";
 import { BlurFade } from "./magicui/blur-fade";
 import { Link } from "react-router-dom";
+import { VisualModeToggle } from "./visual-mode-toggle";
 
 const Header = () => {
   const { gameState } = useGameState();
@@ -60,6 +61,9 @@ const Header = () => {
         </BlurFade>
         <BlurFade inView delay={0.2}>
           <ModeToggle />
+        </BlurFade>
+        <BlurFade inView delay={0.25}>
+          <VisualModeToggle />
         </BlurFade>
       </div>
     </nav>

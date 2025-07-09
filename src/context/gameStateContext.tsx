@@ -12,13 +12,15 @@ const defaultState: GameState = {
   timeTaken: 0,
   userAnswer: [],
   solution: [],
-  clues: []
+  clues: [],
+  visualMode: "visual", // default to visual mode
 };
 
 interface GameStateContextType {
   gameState: GameState;
   updateState: (updates: Partial<GameState>) => void;
   resetGame: () => void;
+  setVisualMode: (mode: "performance" | "visual") => void; // add setter
 }
 
 const GameStateContext = createContext<GameStateContextType | undefined>(
@@ -26,7 +28,7 @@ const GameStateContext = createContext<GameStateContextType | undefined>(
 );
 
 export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({
-  children
+  children,
 }) => {
   const [gameState, setGameState] = useState<GameState>(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -41,12 +43,18 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({
     setGameState((prev) => ({ ...prev, ...updates }));
   };
 
+  const setVisualMode = (mode: "performance" | "visual") => {
+    setGameState((prev) => ({ ...prev, visualMode: mode }));
+  };
+
   const resetGame = () => {
     setGameState(defaultState);
   };
 
   return (
-    <GameStateContext.Provider value={{ gameState, updateState, resetGame }}>
+    <GameStateContext.Provider
+      value={{ gameState, updateState, resetGame, setVisualMode }}
+    >
       {children}
     </GameStateContext.Provider>
   );

@@ -20,7 +20,7 @@ export const ATTRIBUTE: AttributeSet = {
   departureTime: ["5", "6", "7", "8", "9"],
   cargo: ["Coffee", "Cocoa", "Rice", "Corn", "Tea"],
   chimneyColor: ["Black", "Blue", "Green", "Red", "White"],
-  destination: ["Marseille", "Manila", "Genoa", "Hamburg", "Port Said"]
+  destination: ["Marseille", "Manila", "Genoa", "Hamburg", "Port Said"],
 };
 
 export type Difficulty = "easy" | "medium" | "hard";
@@ -50,6 +50,8 @@ export type SubmitResult = {
 
 export type GameStatus = "not_started" | "in_progress" | "completed";
 
+export type VisualMode = "performance" | "visual";
+
 export interface GameState {
   username: string;
   difficulty: Difficulty;
@@ -59,4 +61,5 @@ export interface GameState {
   userAnswer: ShipAttribute[];
   solution: ShipAttribute[];
   clues: string[];
+  visualMode?: VisualMode;
 }
