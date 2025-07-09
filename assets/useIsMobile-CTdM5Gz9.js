@@ -1,1 +1,0 @@
-import{r as o}from"./index-DPvhCFP3.js";const a=()=>{const[s,i]=o.useState(!1);return o.useEffect(()=>{const e=()=>{const t=navigator.userAgent.toLowerCase(),r=/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(t);i(r)};return e(),window.addEventListener("resize",e),()=>{window.removeEventListener("resize",e)}},[]),s};export{a as u};
