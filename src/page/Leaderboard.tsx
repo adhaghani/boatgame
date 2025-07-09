@@ -53,7 +53,13 @@ export default function Leaderboard() {
         )}
         {scores.map((a, i) => (
           <BlurFade delay={(i + 1) * 0.1} key={i}>
-            <Card className="flex flex-col md:flex-row items-center justify-between p-1 md:p-4 text-xs md:text-base">
+            <Card
+              className={`flex flex-col md:flex-row items-center justify-between p-1 md:p-4 text-xs md:text-base  ${
+                a.score < 0
+                  ? "bg-red-200 dark:bg-red-950"
+                  : "bg-green-200 dark:bg-green-950"
+              }`}
+            >
               <CardHeader className="flex flex-row items-center gap-1 md:gap-4">
                 <Text as="p" className="font-bold text-base md:text-2xl">
                   #{i + 1}

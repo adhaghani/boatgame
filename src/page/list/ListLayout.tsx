@@ -6,6 +6,7 @@ import {
   CardContent,
   CardHeader,
   CardFooter,
+  CardTitle,
 } from "@/components/ui/card";
 import {
   Carousel,
@@ -113,43 +114,55 @@ const ListLayout = memo(() => {
                                   key={ans.position}
                                   className="max-w-[320px]"
                                 >
-                                  <div className="flex flex-col border rounded-lg">
-                                    <div className="text-center font-semibold py-1 border-b bg-secondary">
-                                      Position {ans.position}
-                                    </div>
-                                    {[
-                                      "nationality",
-                                      "departureTime",
-                                      "cargo",
-                                      "chimneyColor",
-                                      "destination",
-                                    ].map((key) => {
-                                      const k = key as keyof typeof ans;
-                                      const isWrong = incorrectAttrs.some(
-                                        (ia) => ia.attribute === key
-                                      );
-                                      return (
-                                        <div
-                                          key={key}
-                                          className={`p-2 border-b last:border-b-0 text-xs md:text-base text-center ${
-                                            isWrong
-                                              ? "bg-red-200 dark:bg-red-900"
-                                              : "bg-green-200 dark:bg-green-900"
-                                          }`}
-                                        >
-                                          <div className="font-bold capitalize">
-                                            {key}
-                                          </div>
-                                          <div>User: {ans[k]}</div>
-                                          {isWrong && sol ? (
-                                            <div className="text-xs">
-                                              Correct: {sol[k]}
+                                  <Card>
+                                    <CardHeader className="text-center">
+                                      <CardTitle>
+                                        Position {ans.position}
+                                      </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                      {[
+                                        "nationality",
+                                        "departureTime",
+                                        "cargo",
+                                        "chimneyColor",
+                                        "destination",
+                                      ].map((key) => {
+                                        const k = key as keyof typeof ans;
+                                        const isWrong = incorrectAttrs.some(
+                                          (ia) => ia.attribute === key
+                                        );
+                                        return (
+                                          <div
+                                            key={key}
+                                            className={`p-2 my-1 border-b last:border-b-0 text-xs md:text-base rounded-lg text-center ${
+                                              isWrong
+                                                ? "bg-red-200 dark:bg-red-950"
+                                                : "bg-green-200 dark:bg-green-950"
+                                            }`}
+                                          >
+                                            <div className="font-bold capitalize">
+                                              {key}
                                             </div>
-                                          ) : null}
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
+                                            {ans[k] === "" ? (
+                                              <Text as="p" className="text-xs">
+                                                User did not answer
+                                              </Text>
+                                            ) : (
+                                              <Text as="p" className="text-xs">
+                                                User: {ans[k]}
+                                              </Text>
+                                            )}
+                                            {isWrong && sol ? (
+                                              <Text as="p" className="text-xs">
+                                                Answer: {sol[k]}
+                                              </Text>
+                                            ) : null}
+                                          </div>
+                                        );
+                                      })}
+                                    </CardContent>
+                                  </Card>
                                 </CarouselItem>
                               );
                             })}
@@ -168,46 +181,53 @@ const ListLayout = memo(() => {
                                 (ia) => ia.position === ans.position
                               );
                             return (
-                              <div
-                                key={ans.position}
-                                className="flex flex-col border rounded-lg"
-                              >
-                                <div className="text-center font-semibold py-1 border-b bg-secondary">
-                                  Position {ans.position}
-                                </div>
-                                {[
-                                  "nationality",
-                                  "departureTime",
-                                  "cargo",
-                                  "chimneyColor",
-                                  "destination",
-                                ].map((key) => {
-                                  const k = key as keyof typeof ans;
-                                  const isWrong = incorrectAttrs.some(
-                                    (ia) => ia.attribute === key
-                                  );
-                                  return (
-                                    <div
-                                      key={key}
-                                      className={`p-2 border-b last:border-b-0 text-xs md:text-base text-center ${
-                                        isWrong
-                                          ? "bg-red-200 dark:bg-red-900"
-                                          : "bg-green-200 dark:bg-green-900"
-                                      }`}
-                                    >
-                                      <div className="font-bold capitalize">
-                                        {key}
-                                      </div>
-                                      <div>User: {ans[k]}</div>
-                                      {isWrong && sol ? (
-                                        <div className="text-xs">
-                                          Correct: {sol[k]}
+                              <Card key={ans.position}>
+                                <CardHeader className="text-center">
+                                  <CardTitle>Position {ans.position}</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                  {[
+                                    "nationality",
+                                    "departureTime",
+                                    "cargo",
+                                    "chimneyColor",
+                                    "destination",
+                                  ].map((key) => {
+                                    const k = key as keyof typeof ans;
+                                    const isWrong = incorrectAttrs.some(
+                                      (ia) => ia.attribute === key
+                                    );
+                                    return (
+                                      <div
+                                        key={key}
+                                        className={`p-2 my-1 last:border-b-0 aspect-video text-xs md:text-base text-center grid place-items-center rounded-lg ${
+                                          isWrong
+                                            ? "bg-red-200 dark:bg-red-950"
+                                            : "bg-green-200 dark:bg-green-950"
+                                        }`}
+                                      >
+                                        <div className="font-bold capitalize">
+                                          {key}
                                         </div>
-                                      ) : null}
-                                    </div>
-                                  );
-                                })}
-                              </div>
+                                        {ans[k] === "" ? (
+                                          <Text as="p" className="text-xs">
+                                            User did not answer
+                                          </Text>
+                                        ) : (
+                                          <Text as="p" className="text-xs">
+                                            User: {ans[k]}
+                                          </Text>
+                                        )}
+                                        {isWrong && sol ? (
+                                          <Text as="p" className="text-xs">
+                                            Answer: {sol[k]}
+                                          </Text>
+                                        ) : null}
+                                      </div>
+                                    );
+                                  })}
+                                </CardContent>
+                              </Card>
                             );
                           })}
                         </div>

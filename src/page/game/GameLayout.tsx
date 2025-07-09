@@ -647,8 +647,11 @@ const GameLayout = memo(() => {
                     </div>
                   </CardContent>
                   <CardFooter className="justify-end flex items-center gap-4">
-                    <Button onClick={NavigateToHome}>
+                    <Button variant={"secondary"} onClick={NavigateToHome}>
                       Return to Main Menu
+                    </Button>
+                    <Button onClick={() => Navigate("/leaderboard")}>
+                      View Leaderboard
                     </Button>
                   </CardFooter>
                 </Card>
