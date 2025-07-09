@@ -4,6 +4,7 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { getPastAttempts } from "@/constants";
 import useIsMobile from "@/hooks/useIsMobile";
+import { BlurFade } from "@/components/magicui/blur-fade";
 
 function calculateScore(attempt: attempt) {
   // correct carries more weight, then time, then incorrect
@@ -29,42 +30,47 @@ export default function Leaderboard() {
 
   return (
     <div className={isMobile ? "px-1" : "max-w-2xl mx-auto px-4"}>
-      <Text as="h1" className="text-center text-2xl md:text-4xl mb-4">
-        Leaderboard
-      </Text>
-      <Text
-        as="p"
-        className="text-center text-xs md:text-base mb-2 text-muted-foreground"
-      >
-        Score = Correct × 1000 − Time × 2 − Incorrect × 200
-      </Text>
+      <BlurFade inView delay={0.1}>
+        <Text as="h1" className="text-center text-2xl md:text-4xl mb-4">
+          Leaderboard
+        </Text>
+      </BlurFade>
+      <BlurFade delay={0.1}>
+        <Text
+          as="p"
+          className="text-center text-xs md:text-base mb-2 text-muted-foreground"
+        >
+          Score = Correct × 1000 − Time × 2 − Incorrect × 200
+        </Text>
+      </BlurFade>
       <div className="space-y-1 md:space-y-2">
         {scores.length === 0 && (
-          <Card>
-            <CardContent>No scores yet.</CardContent>
-          </Card>
+          <BlurFade delay={0.2}>
+            <Card>
+              <CardContent>No scores yet.</CardContent>
+            </Card>
+          </BlurFade>
         )}
         {scores.map((a, i) => (
-          <Card
-            key={i}
-            className="flex flex-col md:flex-row items-center justify-between p-1 md:p-4 text-xs md:text-base"
-          >
-            <CardHeader className="flex flex-row items-center gap-1 md:gap-4">
-              <Text as="p" className="font-bold text-base md:text-2xl">
-                #{i + 1}
-              </Text>
-              <Text as="p" className="font-semibold text-xs md:text-xl">
-                {a.username}
-              </Text>
-            </CardHeader>
-            <CardContent className="flex flex-col md:flex-row gap-1 md:gap-6 items-center">
-              <Text as="p">
-                Score: <span className="font-bold">{a.score}</span>
-              </Text>
-              <Text as="p">Correct: {25 - a.incorrectAttributes.length}</Text>
-              <Text as="p">Time: {a.timeTaken}s</Text>
-            </CardContent>
-          </Card>
+          <BlurFade delay={(i + 1) * 0.1} key={i}>
+            <Card className="flex flex-col md:flex-row items-center justify-between p-1 md:p-4 text-xs md:text-base">
+              <CardHeader className="flex flex-row items-center gap-1 md:gap-4">
+                <Text as="p" className="font-bold text-base md:text-2xl">
+                  #{i + 1}
+                </Text>
+                <Text as="p" className="font-semibold text-xs md:text-xl">
+                  {a.username}
+                </Text>
+              </CardHeader>
+              <CardContent className="flex flex-col md:flex-row gap-1 md:gap-6 items-center">
+                <Text as="p">
+                  Score: <span className="font-bold">{a.score}</span>
+                </Text>
+                <Text as="p">Correct: {25 - a.incorrectAttributes.length}</Text>
+                <Text as="p">Time: {a.timeTaken}s</Text>
+              </CardContent>
+            </Card>
+          </BlurFade>
         ))}
       </div>
     </div>

@@ -7,6 +7,7 @@ import { useGameState } from "@/context/gameStateContext";
 import { BlurFade } from "./magicui/blur-fade";
 import { Link } from "react-router-dom";
 import { VisualModeToggle } from "./visual-mode-toggle";
+import { Button } from "./ui/button";
 
 const Header = () => {
   const { gameState } = useGameState();
@@ -64,6 +65,13 @@ const Header = () => {
         </BlurFade>
         <BlurFade inView delay={0.25}>
           <VisualModeToggle />
+        </BlurFade>
+        <BlurFade inView delay={0.3}>
+          <Link to="/leaderboard">
+            <Button size="sm" variant="secondary">
+              Leaderboard
+            </Button>
+          </Link>
         </BlurFade>
       </div>
     </nav>
